@@ -27,7 +27,7 @@ export default function ScenariosPage() {
           >
             <div className="p-6 bg-white shadow-md rounded-xl hover:shadow-lg cursor-pointer transition">
               <h2 className="text-xl font-semibold mb-2">{s.title}</h2>
-              <p className="text-gray-600">Click to practice →</p>
+              <p className="text-blue-600">Click to practice →</p>
             </div>
           </Link>
         ))}
