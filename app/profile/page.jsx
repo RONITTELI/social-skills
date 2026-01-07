@@ -53,12 +53,17 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-blue-50 flex justify-center py-10 px-4">
-      <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-3xl">
+    <div className="min-h-screen py-16 px-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-12">
+          <h1 className="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
+            Complete Your Profile
+          </h1>
+          <p className="text-gray-700 text-lg">Help us personalize your learning experience</p>
+        </div>
         
-        <h1 className="text-3xl font-bold text-blue-700 mb-6 text-center">
-          Complete Your Profile
-        </h1>
+        <div className="bg-gradient-to-br from-white via-blue-50/30 to-purple-50/30 backdrop-blur-xl shadow-2xl rounded-3xl p-10 border-2 border-white/50">
+          <div className="space-y-6">
 
         {/* Name */}
         <label className="block font-semibold mb-1">Full Name</label>
@@ -168,10 +173,18 @@ export default function ProfilePage() {
         {/* Submit */}
         <button
           onClick={handleSubmit}
-          className="w-full bg-blue-600 text-white p-4 rounded-xl text-lg hover:bg-blue-700"
+          className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white p-5 rounded-2xl text-lg font-semibold hover:shadow-2xl hover:scale-105 transition-all shadow-xl relative overflow-hidden group"
         >
-          Save & Continue
+          <span className="relative z-10 flex items-center justify-center gap-2">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            Save & Continue
+          </span>
+          <div className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
         </button>
+          </div>
+        </div>
       </div>
     </div>
   );
