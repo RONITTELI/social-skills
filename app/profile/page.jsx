@@ -18,11 +18,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const uid = localStorage.getItem("userId");
-    if (!uid) {
-      window.location.href = "/login";
-      return;
-    }
-    setProfile((prev) => ({ ...prev, userId: uid }));
+    setProfile((prev) => ({ ...prev, userId: uid || "" }));
   }, []);
 
   const interestOptions = ["Technology", "Music", "Sports", "Travel", "Reading", "Gaming", "Art"];
@@ -52,140 +48,119 @@ export default function ProfilePage() {
     }
   }
 
-  return (
-    <div className="min-h-screen py-16 px-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
-            Complete Your Profile
-          </h1>
-          <p className="text-gray-700 text-lg">Help us personalize your learning experience</p>
-        </div>
-        
-        <div className="bg-gradient-to-br from-white via-blue-50/30 to-purple-50/30 backdrop-blur-xl shadow-2xl rounded-3xl p-10 border-2 border-white/50">
-          <div className="space-y-6">
+return (
+  <div className="min-h-screen py-16 px-4 bg-linear-to-br from-blue-100 via-purple-100 to-pink-100 flex justify-center">
+    <div className="max-w-3xl w-full space-y-10">
 
-        {/* Name */}
-        <label className="block font-semibold mb-1">Full Name</label>
-        <input
-          type="text"
-          className="w-full p-3 border rounded mb-4"
-          onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-        />
-
-        {/* Age + Height */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block font-semibold mb-1">Age</label>
-            <input
-              type="number"
-              className="w-full p-3 border rounded mb-4"
-              onChange={(e) => setProfile({ ...profile, age: e.target.value })}
-            />
-          </div>
-
-          <div>
-            <label className="block font-semibold mb-1">Height (in cm)</label>
-            <input
-              type="number"
-              className="w-full p-3 border rounded mb-4"
-              onChange={(e) => setProfile({ ...profile, height: e.target.value })}
-            />
-          </div>
+      {/* PROFILE PREVIEW */}
+      <div className="flex flex-col items-center">
+        <div className="w-32 h-32 rounded-full bg-linear-to-br from-blue-400 via-purple-400 to-pink-400 flex items-center justify-center shadow-lg mb-4">
+          <svg className="w-20 h-20 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
         </div>
 
-        {/* Education */}
-        <label className="block font-semibold mb-1">Education / Profession</label>
-        <input
-          type="text"
-          className="w-full p-3 border rounded mb-4"
-          onChange={(e) => setProfile({ ...profile, education: e.target.value })}
-        />
+        <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-blue-600 via-purple-600 to-pink-600">
+          {profile.name || "Your Name"}
+        </h1>
+        <p className="text-gray-600">{profile.education || "Education / Profession"}</p>
+      </div>
+
+      {/* PROFILE FORM */}
+      <div className="bg-white p-8 rounded-3xl shadow-xl space-y-5">
 
         {/* Personality */}
-        <label className="block font-semibold mb-1">Personality Type</label>
-        <select
-          className="w-full p-3 border rounded mb-4"
-          onChange={(e) => setProfile({ ...profile, personality: e.target.value })}
-        >
-          <option value="">Select</option>
-          <option value="introvert">Introvert</option>
-          <option value="ambivert">Ambivert</option>
-          <option value="extrovert">Extrovert</option>
-        </select>
+        <div>
+          <label className="font-semibold">Personality Type</label>
+          <select
+            className="w-full p-3 border rounded"
+            value={profile.personality}
+            onChange={(e) => setProfile({ ...profile, personality: e.target.value })}
+          >
+            <option value="">Select</option>
+            <option value="introvert">Introvert</option>
+            <option value="ambivert">Ambivert</option>
+            <option value="extrovert">Extrovert</option>
+          </select>
+        </div>
 
         {/* Confidence */}
-        <label className="block font-semibold mb-1">
-          Communication Confidence (1-10)
-        </label>
-        <input
-          type="number"
-          min="1"
-          max="10"
-          className="w-full p-3 border rounded mb-4"
-          onChange={(e) => setProfile({ ...profile, confidence: e.target.value })}
-        />
+        <div>
+          <label className="font-semibold">Confidence (1–10)</label>
+          <input
+            type="number"
+            min="1"
+            max="10"
+            className="w-full p-3 border rounded"
+            value={profile.confidence}
+            onChange={(e) => setProfile({ ...profile, confidence: e.target.value })}
+          />
+        </div>
 
         {/* English Level */}
-        <label className="block font-semibold mb-1">English Speaking Level</label>
-        <select
-          className="w-full p-3 border rounded mb-4"
-          onChange={(e) => setProfile({ ...profile, englishLevel: e.target.value })}
-        >
-          <option value="">Select</option>
-          <option value="beginner">Beginner</option>
-          <option value="intermediate">Intermediate</option>
-          <option value="advanced">Advanced</option>
-        </select>
+        <div>
+          <label className="font-semibold">English Level</label>
+          <select
+            className="w-full p-3 border rounded"
+            value={profile.englishLevel}
+            onChange={(e) => setProfile({ ...profile, englishLevel: e.target.value })}
+          >
+            <option value="">Select</option>
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </div>
 
         {/* Interests */}
-        <label className="block font-semibold mb-2">Your Interests</label>
-        <div className="flex flex-wrap gap-2 mb-4">
-          {interestOptions.map((interest) => (
-            <button
-              key={interest}
-              type="button"
-              className={`px-4 py-2 rounded-full border ${
-                profile.interests.includes(interest)
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-700"
-              }`}
-              onClick={() => toggleInterest(interest)}
-            >
-              {interest}
-            </button>
-          ))}
+        <div>
+          <label className="font-semibold">Interests</label>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {interestOptions.map((interest) => (
+              <button
+                key={interest}
+                type="button"
+                className={`px-4 py-2 rounded-full border ${
+                  profile.interests.includes(interest)
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100"
+                }`}
+                onClick={() => toggleInterest(interest)}
+              >
+                {interest}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Goal */}
-        <label className="block font-semibold mb-1">Your Goal</label>
-        <select
-          className="w-full p-3 border rounded mb-6"
-          onChange={(e) => setProfile({ ...profile, goal: e.target.value })}
-        >
-          <option value="">Select</option>
-          <option value="interview">Interview Preparation</option>
-          <option value="confidence">Build Social Confidence</option>
-          <option value="publicspeaking">Improve Public Speaking</option>
-          <option value="fluency">Improve Fluency</option>
-        </select>
+        <div>
+          <label className="font-semibold">Goal</label>
+          <select
+            className="w-full p-3 border rounded"
+            value={profile.goal}
+            onChange={(e) => setProfile({ ...profile, goal: e.target.value })}
+          >
+            <option value="">Select</option>
+            <option value="interview">Interview Prep</option>
+            <option value="confidence">Social Confidence</option>
+            <option value="publicspeaking">Public Speaking</option>
+            <option value="fluency">Fluency</option>
+          </select>
+        </div>
 
-        {/* Submit */}
+        {/* SUBMIT */}
         <button
           onClick={handleSubmit}
-          className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white p-5 rounded-2xl text-lg font-semibold hover:shadow-2xl hover:scale-105 transition-all shadow-xl relative overflow-hidden group"
+          className="w-full bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 text-white p-4 rounded-xl font-semibold hover:scale-105 transition"
         >
-          <span className="relative z-10 flex items-center justify-center gap-2">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-            Save & Continue
-          </span>
-          <div className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          Save & Continue
         </button>
-          </div>
-        </div>
       </div>
+
     </div>
-  );
+  </div>
+);
+
 }
