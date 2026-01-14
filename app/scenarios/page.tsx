@@ -1,61 +1,84 @@
 "use client";
-import Link from "next/link";
+import React, { useState, useRef, useEffect } from "react";
 
 const scenarios = [
-  { id: 1, title: "Interview Introduction", prompt: "Tell me about yourself in 30 seconds." },
-  { id: 2, title: "Meet a New Friend", prompt: "Introduce yourself casually to someone new." },
-  { id: 3, title: "Classroom Introduction", prompt: "Introduce yourself on the first day of class." },
-  { id: 4, title: "Workplace Conversation", prompt: "Explain your role to a teammate." },
+  "Job Interview",
+  "Making a New Friend",
+  "Public Speaking",
+  "Ordering at a Restaurant",
+  "Giving Feedback",
+  "Team Meeting"
 ];
 
-export default function ScenariosPage() {
-  const getGradientClasses = (index) => {
-    const gradients = [
-      { bg: 'from-blue-500/10 to-purple-500/10', badge: 'from-blue-500 to-purple-600' },
-      { bg: 'from-purple-500/10 to-pink-500/10', badge: 'from-purple-500 to-pink-600' },
-      { bg: 'from-green-500/10 to-emerald-500/10', badge: 'from-green-500 to-emerald-600' },
-      { bg: 'from-orange-500/10 to-yellow-500/10', badge: 'from-orange-500 to-yellow-600' }
-    ];
-    return gradients[index % 4];
-  };
+export default function ScenarioSpeechPage() {
+  const [selected, setSelected] = useState<string | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [cameraOn, setCameraOn] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (cameraOn && videoRef.current) {
+      navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+        .then((stream) => {
+          videoRef.current!.srcObject = stream;
+        })
+        .catch((err) => {
+          setError("Camera access denied or not available.");
+        });
+    } else if (videoRef.current) {
+      if (videoRef.current.srcObject) {
+        (videoRef.current.srcObject as MediaStream)
+          .getTracks()
+          .forEach((track) => track.stop());
+        videoRef.current.srcObject = null;
+      }
+    }
+    // Cleanup on unmount
+    return () => {
+      if (videoRef.current && videoRef.current.srcObject) {
+        (videoRef.current.srcObject as MediaStream)
+          .getTracks()
+          .forEach((track) => track.stop());
+        videoRef.current.srcObject = null;
+      }
+    };
+  }, [cameraOn]);
 
   return (
-    <div className="min-h-screen py-16 px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-5xl md:text-6xl font-extrabold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Select a Scenario</h1>
-          <p className="text-gray-700 text-lg max-w-2xl mx-auto">Choose a scenario below to start practicing your communication skills</p>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-linear-to-br from-blue-100 via-purple-100 to-pink-100 p-8">
+      <div className="bg-white/90 rounded-3xl shadow-2xl p-10 max-w-xl w-full text-center border-2 border-white/50">
+        <h1 className="text-3xl font-extrabold bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">Scenario & Speech Analysis</h1>
+        <p className="text-gray-700 mb-8">(Frontend Only) Select a scenario and turn on your camera. In the real app, you would record audio/video and see speech analysis here.</p>
+        <div className="grid grid-cols-1 gap-3 mb-6">
+          {scenarios.map((sc, i) => (
+            <button
+              key={sc}
+              className={`w-full px-6 py-3 rounded-xl border font-semibold transition-all ${selected === sc ? "bg-blue-600 text-white" : "bg-white text-blue-700 border-blue-200 hover:bg-blue-50"}`}
+              onClick={() => setSelected(sc)}
+            >
+              {i + 1}. {sc}
+            </button>
+          ))}
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {scenarios.map((s, index) => {
-            const gradient = getGradientClasses(index);
-            return (
-              <Link
-                key={s.id}
-                href={{
-                  pathname: "/prompt",
-                  query: {
-                    title: s.title,
-                    prompt: s.prompt,
-                  },
-                }}
-              >
-                <div className="group relative h-full p-8 bg-white/90 backdrop-blur shadow-xl rounded-3xl hover:shadow-2xl cursor-pointer transition-all duration-300 border border-gray-100 overflow-hidden">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${gradient.bg} opacity-0 group-hover:opacity-100 transition-opacity`}></div>
-                  <div className="relative flex flex-col h-full">
-                    <div className={`w-14 h-14 mb-4 rounded-2xl bg-gradient-to-br ${gradient.badge} flex items-center justify-center shadow-lg`}>
-                      <span className="text-2xl font-bold text-white">{s.id}</span>
-                    </div>
-                    <h2 className="text-xl font-bold mb-3 text-gray-900">{s.title}</h2>
-                    <p className="text-gray-600 text-sm mb-4 flex-grow">{s.prompt}</p>
-                    <p className="text-blue-600 font-semibold group-hover:translate-x-1 transition-transform">Start practicing →</p>
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+        {selected && (
+          <div className="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-200 text-blue-800">
+            <div className="font-bold mb-2">Selected Scenario:</div>
+            <div>{selected}</div>
+            <button
+              className={`mt-4 px-6 py-2 rounded-xl font-semibold transition-all ${cameraOn ? "bg-red-600 text-white" : "bg-blue-600 text-white"}`}
+              onClick={() => setCameraOn((on) => !on)}
+            >
+              {cameraOn ? "Turn Off Camera" : "Turn On Camera"}
+            </button>
+            {error && <div className="mt-2 text-red-500 text-sm">{error}</div>}
+            {cameraOn && (
+              <div className="mt-6 flex flex-col items-center">
+                <video ref={videoRef} autoPlay playsInline className="rounded-2xl border-4 border-blue-200 shadow-lg w-64 h-48 bg-black" />
+                <div className="mt-2 text-xs text-gray-400">(Camera preview only, not recording)</div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
